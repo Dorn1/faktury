@@ -9,6 +9,7 @@ session_destroy();
     <title>Faktury</title>
 </head>
 <body>
+    Super tajn informacja dla Kuby z przyszłości
     <form action="panel.php" method="post">
         Login:<input type="text" name="login"><br>
         Hasło:<input type="password" name="haslo"><br>
