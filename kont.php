@@ -9,10 +9,8 @@ require_once "connect.php";
     <title>Faktury</title>
 </head>
 <body>
+    <a href="panel.php">panel</a>
     <?php
-
- 
-    mysqli_close($con);
     ?>
 </body>
 </html>
