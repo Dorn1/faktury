@@ -18,5 +18,4 @@
    if($con->connect_errno!=0){
        header('Location: index.php');
    }
-   echo "$login<br>$haslo";
 ?>

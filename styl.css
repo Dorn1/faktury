@@ -1,0 +1,22 @@
+ body{
+    background-color: rgb(85, 85, 252);
+    margin: 0;
+}
+main{
+    background-color: lightgray;
+    width: 60%;
+    text-align: center;
+    margin:auto;
+    margin-top: 4%;
+    padding:15%;
+    padding-top: 5%;
+}
+form{
+    margin-top:150px;
+}
+header{
+    width: 100%;
+    background-color: white;
+    height: 70px;
+    border: none;
+}
