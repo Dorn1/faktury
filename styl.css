@@ -1,22 +1,90 @@
  body{
     background-color: rgb(85, 85, 252);
     margin: 0;
+    font-family:'Franklin Gothic Medium';
 }
 main{
     background-color: lightgray;
-    width: 60%;
+    width: 80%;
+    height: 550px;
     text-align: center;
     margin:auto;
-    margin-top: 4%;
-    padding:15%;
-    padding-top: 5%;
+    margin-top: 20px;
+    padding:5%;
+    padding-top: 15px;
+    padding-bottom: 10%;
 }
 form{
     margin-top:150px;
 }
 header{
-    width: 100%;
+    width: 70%;
     background-color: white;
-    height: 70px;
+    height: 60px;
     border: none;
+    float: left;
+}
+h1{
+    color:rgb(85, 85, 252);
+    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+    letter-spacing: 3px;
+    font-size: 40px;
+}
+nav{
+    padding-top: 5px;
+    width:100%;
+    height: 50px;
+    background-color: lightgray;
+    text-align: center;
+    font-size: 30px;
+    clear: both;
+}
+a{
+    margin-left: 30px;
+    text-decoration: none;
+    color:black;
+}
+#nav{
+    width: 70%;
+    margin: auto;
+}
+#nav td{
+    padding-right: 15px;
+    padding-right: 15px;
+    border-left: 2px solid black ;
+    text-align: center;
+}
+#login{
+    box-sizing: border-box;
+    border-left: 3px solid rgb(85, 85, 252);
+    width: 30%;
+    background-color: white;
+    float: left;
+    height: 60px;
+    text-align: center;
+    padding-top: 15px;
+    font-size: 20px;
+}
+main table{
+    
+    font-size: 20px;
+    letter-spacing: 1px;
+    margin:auto;
+    border:2px solid black;
+    width: 100%;
+}
+main table td{
+    background-color: rgba(255, 255, 255, 0.932);
+    height: 40px;
+}
+main table th{
+    background-color: rgb(85, 85, 252);
+    color: white;
+    height: 40px;
+}
+button{
+    border: 0;
+    background-color: rgb(85, 85, 252);
+    color: white;
+    height: 25px;
 }

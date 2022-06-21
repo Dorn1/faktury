@@ -10,12 +10,12 @@ session_destroy();
     <title>Faktury</title>
 </head>
 <body>
-    <header></header>
-    <main>
-        <h1>Witamy w systemie archiwizacji faktur firmy efektor!</h1>
+    <header style="width:100%; margin-bottom:20px"><img src='logo.png'></header>
+    <main style = "clear:both;">
+        <h1>Witamy w systemie archiwizacji faktur firmy Efektor!</h1>
         <form action="panel.php" method="post">
-        Login:<input type="text" name="login"><br>
-        Hasło:<input type="password" name="haslo"><br>
+        Login:<input type="text" name="login"><br><br>
+        Hasło:<input type="password" name="haslo"><br><br>
         <input type="submit" value="Zaluguj się">
         </form>
     </main>
