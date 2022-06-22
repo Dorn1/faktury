@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once "connect.php";
+
 ?>
 <!DOCTYPE html>
 <html lang="pl">
@@ -26,6 +27,27 @@ require_once "connect.php";
         <th>NIP</th><th>kontrahent</th><th></th>
     </tr>
     <?php
+        if(isset($_POST['nip_old'])){
+        $sql = 'UPDATE kontrahenci SET nip="'.$_POST['nip_new'].'" , kontrahent = "'.$_POST['kontrahent'].'" WHERE kontrahenci.nip="'.$_POST['nip_old'].'"';
+        unset($_POST['nip_old']);
+        if ($con->query($sql) === TRUE) {
+            echo "Pomyślnie zaktualizowano dane";
+          } else {
+            echo "Error updating record: " . $con->error;
+          }
+          unset($sql);
+        }
+        elseif(isset($_POST['check'])){
+            $sql = 'INSERT INTO kontrahenci (nip, kontrahent) VALUES ("'.$_POST['nip_new'].'","'.$_POST['kontrahent'].'")';
+            unset($_POST['check']);
+            if ($con->query($sql) === TRUE) {
+                echo "Pomyślnie dodane dane";
+              } else {
+                echo "Error adding record: " . $con->error;
+              }
+              unset($sql);
+        }
+   
         $res = mysqli_query($con,"Select * FROM kontrahenci");
         while($r = mysqli_fetch_array($res)){
             echo'<tr><form action="akont.php" method="POST"><input type="hidden" name ="nip" value='.$r['nip'].'><input type="hidden" name ="kontrahent" value='.$r['kontrahent'].'>';
