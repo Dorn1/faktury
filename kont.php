@@ -23,19 +23,19 @@ require_once "connect.php";
         <h1>Lista kontrahentów</h1>
     <table rules=rows>
         <tr>
-        <th>NIP</th><th>kontrahent</th>
+        <th>NIP</th><th>kontrahent</th><th></th>
     </tr>
     <?php
         $res = mysqli_query($con,"Select * FROM kontrahenci");
         while($r = mysqli_fetch_array($res)){
-            echo"<tr>";
-            echo '<td>'.$r['nip'].'</td><td>'.$r['kontrahent'].'</td>';
-            echo"</tr>";
+            echo'<tr><form action="akont.php" method="POST"><input type="hidden" name ="nip" value='.$r['nip'].'><input type="hidden" name ="kontrahent" value='.$r['kontrahent'].'>';
+            echo '<td>'.$r['nip'].'</td><td>'.$r['kontrahent'].'</td><td><input type ="submit" value="edytuj"></td>';
+            echo'</form></tr>';
         }
 
     ?>
     <tr>
-        <td colspan="2"><button>Dodaj kontrachenta</button></td>
+        <td colspan="3"><form action="akont.php" method="POST"><input type="hidden" name ="nip" value=''><input type="hidden" name ="kontrahent" value=''><input type ="submit" value="dodaj kontrahenta"></form></td>
     </tr>
     </table>
     </main>

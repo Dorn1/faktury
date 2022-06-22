@@ -67,7 +67,7 @@ a{
 }
 main table{
     
-    font-size: 20px;
+    font-size: 17px;
     letter-spacing: 1px;
     margin:auto;
     border:2px solid black;
@@ -82,9 +82,16 @@ main table th{
     color: white;
     height: 40px;
 }
-button{
+main table td input{
     border: 0;
     background-color: rgb(85, 85, 252);
     color: white;
     height: 25px;
+    font-size: 18px;
+    padding: 4px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+main table td form{
+    margin: 0;
 }
