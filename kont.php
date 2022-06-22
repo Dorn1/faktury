@@ -29,13 +29,13 @@ require_once "connect.php";
         $res = mysqli_query($con,"Select * FROM kontrahenci");
         while($r = mysqli_fetch_array($res)){
             echo'<tr><form action="akont.php" method="POST"><input type="hidden" name ="nip" value='.$r['nip'].'><input type="hidden" name ="kontrahent" value='.$r['kontrahent'].'>';
-            echo '<td>'.$r['nip'].'</td><td>'.$r['kontrahent'].'</td><td><input type ="submit" value="edytuj"></td>';
+            echo '<td>'.$r['nip'].'</td><td>'.$r['kontrahent'].'</td><td><input type ="submit" class="edit" value="edytuj"></td>';
             echo'</form></tr>';
         }
 
     ?>
     <tr>
-        <td colspan="3"><form action="akont.php" method="POST"><input type="hidden" name ="nip" value=''><input type="hidden" name ="kontrahent" value=''><input type ="submit" value="dodaj kontrahenta"></form></td>
+        <td colspan="3"><form action="akont.php" method="POST"><input type="hidden" name ="nip" value=''><input type="hidden" name ="kontrahent" value=''><input type ="submit" class="edit" value="dodaj kontrahenta"></form></td>
     </tr>
     </table>
     </main>
