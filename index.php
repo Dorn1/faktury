@@ -16,7 +16,7 @@ session_destroy();
         <form action="panel.php" method="post">
         Login:<input type="text" name="login"><br><br>
         Hasło:<input type="password" name="haslo"><br><br>
-        <input type="submit" value="Zaluguj się">
+        <input type="submit" value="Zaloguj się">
         </form>
     </main>
 </body>

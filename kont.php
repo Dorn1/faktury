@@ -24,7 +24,7 @@ require_once "connect.php";
         <h1>Lista kontrahentów</h1>
     <table rules=rows>
         <tr>
-        <th>NIP</th><th>kontrahent</th><th></th>
+        <th>NIP</th><th>kontrahent</th><th></th><th></th>
     </tr>
     <?php
         if(isset($_POST['nip_old'])){
@@ -52,12 +52,12 @@ require_once "connect.php";
         while($r = mysqli_fetch_array($res)){
             echo'<tr><form action="akont.php" method="POST"><input type="hidden" name ="nip" value='.$r['nip'].'><input type="hidden" name ="kontrahent" value='.$r['kontrahent'].'>';
             echo '<td>'.$r['nip'].'</td><td>'.$r['kontrahent'].'</td><td><input type ="submit" class="edit" value="edytuj"></td>';
-            echo'</form></tr>';
+            echo'</form><td><button type="button">usuń</button></td></tr>';
         }
 
     ?>
     <tr>
-        <td colspan="3"><form action="akont.php" method="POST"><input type="hidden" name ="nip" value=''><input type="hidden" name ="kontrahent" value=''><input type ="submit" class="edit" value="dodaj kontrahenta"></form></td>
+        <td colspan="4"><form action="akont.php" method="POST"><input type="hidden" name ="nip" value=''><input type="hidden" name ="kontrahent" value=''><input type ="submit" class="edit" value="dodaj kontrahenta"></form></td>
     </tr>
     </table>
     </main>
