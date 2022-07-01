@@ -6,6 +6,9 @@ require_once "connect.php";
 <!DOCTYPE html>
 <html lang="pl">
 <head>
+    <script src="skrypty.js">
+        
+    </script>
     <link rel="stylesheet" href="styl.css">
     <meta charset="UTF-8">
     <title>Faktury</title>
@@ -32,27 +35,40 @@ require_once "connect.php";
         unset($_POST['nip_old']);
         if ($con->query($sql) === TRUE) {
             echo "Pomyślnie zaktualizowano dane";
+            header('Refresh: 2; URL=kont.php');
           } else {
             echo "Error updating record: " . $con->error;
           }
           unset($sql);
         }
-        elseif(isset($_POST['check'])){
+        if(isset($_POST['check'])){
             $sql = 'INSERT INTO kontrahenci (nip, kontrahent) VALUES ("'.$_POST['nip_new'].'","'.$_POST['kontrahent'].'")';
             unset($_POST['check']);
             if ($con->query($sql) === TRUE) {
                 echo "Pomyślnie dodane dane";
+                header('Refresh: 2; URL=kont.php');
               } else {
                 echo "Error adding record: " . $con->error;
               }
               unset($sql);
+        }
+        if(isset($_GET['nip'])){
+            $sql="DELETE FROM kontrahenci WHERE nip=".$_GET['nip'];
+            if ($con->query($sql) === TRUE) {
+                echo "Pomyślnie usunięto dane";
+                header('Refresh: 2; URL=kont.php');
+              } else {
+                echo "Error adding record: " . $con->error;
+              }
+              unset($sql);
+            unset($_GET['nip']);
         }
    
         $res = mysqli_query($con,"Select * FROM kontrahenci");
         while($r = mysqli_fetch_array($res)){
             echo'<tr><form action="akont.php" method="POST"><input type="hidden" name ="nip" value='.$r['nip'].'><input type="hidden" name ="kontrahent" value='.$r['kontrahent'].'>';
             echo '<td>'.$r['nip'].'</td><td>'.$r['kontrahent'].'</td><td><input type ="submit" class="edit" value="edytuj"></td>';
-            echo'</form><td><button type="button">usuń</button></td></tr>';
+            echo'</form><td><button type="button" onclick="usunk('.$r['nip'].')">usuń</button></td></tr>';
         }
 
     ?>
