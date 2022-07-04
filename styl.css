@@ -96,3 +96,14 @@ main table th{
 main table td form{
     margin: 0;
 }
+#projekt_data{
+    margin-top: 10px;
+    width: 100%;
+    text-align: center;
+    background-color: white;
+    padding: 15px;
+}
+#projekt_data input{
+    margin-left: 50px;
+    margin-right: 50px;
+}

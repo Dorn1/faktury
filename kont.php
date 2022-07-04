@@ -68,7 +68,7 @@ require_once "connect.php";
         while($r = mysqli_fetch_array($res)){
             echo'<tr><form action="akont.php" method="POST"><input type="hidden" name ="nip" value='.$r['nip'].'><input type="hidden" name ="kontrahent" value='.$r['kontrahent'].'>';
             echo '<td>'.$r['nip'].'</td><td>'.$r['kontrahent'].'</td><td><input type ="submit" class="edit" value="edytuj"></td>';
-            echo'</form><td><button type="button" onclick="usunk('.$r['nip'].')">usuń</button></td></tr>';
+            echo'</form><td><button type="button" onclick="usunk('.$r['nip'].')" class="edit">usuń</button></td></tr>';
         }
 
     ?>
