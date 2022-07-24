@@ -40,15 +40,41 @@ require_once "connect.php";
 
     <table rules=rows>
         <tr>
-            <th>nazwa</th><th>kontrahent</th><th>stan</th>
+            <th>nazwa</th><th>kontrahent</th><th>stan</th><th></th>
         </tr>
 
         <?php
+        if(isset($_POST['edit'])){
+            if($_POST['koniec']!= NULL){
+            $sql = 'UPDATE projekty SET nazwa="'.$_POST['nazwa'].'", klient_nip="'.$_POST['kont'].'", Data_rozpoczecia=STR_TO_DATE("'.$_POST['start'].'","%Y-%m-%d"), Data_zakonczenia=STR_TO_DATE("'.$_POST['koniec'].'","%Y-%m-%d") WHERE id='.$_POST['edit'];
+            }else{
+            $sql = 'UPDATE projekty SET nazwa="'.$_POST['nazwa'].'", klient_nip="'.$_POST['kont'].'", Data_rozpoczecia=STR_TO_DATE("'.$_POST['start'].'","%Y-%m-%d") WHERE id='.$_POST['edit'];
+            }
+            if ($con->query($sql) === TRUE) {
+                echo "Pomyślnie zaktualizowano dane";
+              } else {
+                echo "Error updating record: " . $con->error;
+              }
+            unset($_POST['edit']);
+        }
+        if(isset($_POST['add'])){
+            if($_POST['koniec']!= NULL){
+            $sql = 'INSERT INTO projekty(nazwa , klient_nip, Data_rozpoczecia, Data_zakonczenia) VALUES("'.$_POST['nazwa'].'", "'.$_POST['kont'].'", STR_TO_DATE("'.$_POST['start'].'","%Y-%m-%d"), STR_TO_DATE("'.$_POST['koniec'].'","%Y-%m-%d"))';
+            }else{
+            $sql = 'INSERT INTO projekty(nazwa , klient_nip, Data_rozpoczecia) VALUES( "'.$_POST['nazwa'].'", "'.$_POST['kont'].'", STR_TO_DATE("'.$_POST['start'].'","%Y-%m-%d") )';
+            }
+            if ($con->query($sql) === TRUE) {
+                echo "Pomyślnie zaktualizowano dane";
+              } else {
+                echo "Error updating record: " . $con->error;
+              }
+            unset($_POST['add']);
+        }
         if(isset($_POST['start']) && isset($_POST['koniec']) ){
-            $sql='SELECT id , nazwa ,kontrahenci.kontrahent AS kont , Data_rozpoczecia , Data_zakonczenia FROM projekty inner join kontrahenci on kontrahenci.nip=projekty.klient_nip WHERE Data_rozpoczecia >= STR_TO_DATE("'.$_POST['start'].'","%Y-%m-%d") AND '.'Data_zakonczenia <= STR_TO_DATE("'.$_POST['koniec'].'","%Y-%m-%d")';
+            $sql='SELECT id , nazwa ,kontrahenci.kontrahent AS kont , Data_rozpoczecia , Data_zakonczenia FROM projekty inner join kontrahenci on kontrahenci.nip=projekty.klient_nip WHERE Data_rozpoczecia >= STR_TO_DATE("'.$_POST['start'].'","%Y-%m-%d") AND '.'Data_rozpoczecia <= STR_TO_DATE("'.$_POST['koniec'].'","%Y-%m-%d")';
             $res = mysqli_query($con,$sql);
             while($r = mysqli_fetch_array($res)){
-                echo '<tr>';
+                echo '<tr><form action="aprojekt.php" method="POST"> <input type="hidden" name="id" value="'.$r['id'].'">';
                 echo '<td>'.$r['nazwa'].'</td><td>'.$r['kont'].'</td>';
                 if($r['Data_zakonczenia']!= NULL){
                     echo '<td>zakończony</td>';
@@ -56,10 +82,13 @@ require_once "connect.php";
                 else{
                     echo '<td>w trakcie</td>';
                 }
+                echo '<td><input type="submit" class="edit" value="edytuj"></td></form>';
                 echo '</tr>';
             }
+            
         }
         ?>
+        <tr><form action="aprojekt.php" method="POST"><td colspan="4"><input type="submit" class="edit" value="dodaj"></td></form></tr>
     </table>
     </main>
   
