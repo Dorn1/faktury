@@ -24,17 +24,20 @@ require_once "connect.php";
         
         <form action="projekty.php" method="post" id="projekt_data">
         <?php
-        if(!isset($_POST['start']) && !isset($_POST['koniec'])){
-            echo 'od:<input type="date" name="start" value="1.02.2020">';
-            echo'do:<input type="date" name="koniec" value="1.06.2022">';
-            echo'<input type=submit value= "zatwierdź" class="edit">';
+        if(isset($_POST['start']) && isset($_POST['koniec'])){
+            $_SESSION['koniec'] = $_POST['koniec'];
+            $_SESSION['start'] = $_POST['start'];
+        }
+        if(!isset($_SESSION['start']) && !isset($_SESSION['koniec'])){
+             echo 'od:<input type="date" name="start" >';
+             echo'do:<input type="date" name="koniec" >';
         }
         else{
-            echo 'od:<input type="date" name="start" value='.$_POST['start'].'>';
-            echo'do:<input type="date" name="koniec" value='.$_POST['koniec'].'>';
-            echo'<input type=submit value= "zatwierdź" class="edit">';
+            echo 'od:<input type="date" name="start" value='.$_SESSION['start'].'>';
+            echo'do:<input type="date" name="koniec" value='.$_SESSION['koniec'].'>';
         }
         ?>
+        <input type=submit value= "zatwierdź" class="edit">
         </form>
 
 
@@ -45,10 +48,10 @@ require_once "connect.php";
 
         <?php
         if(isset($_POST['edit'])){
-            if($_POST['koniec']!= NULL){
-            $sql = 'UPDATE projekty SET nazwa="'.$_POST['nazwa'].'", klient_nip="'.$_POST['kont'].'", Data_rozpoczecia=STR_TO_DATE("'.$_POST['start'].'","%Y-%m-%d"), Data_zakonczenia=STR_TO_DATE("'.$_POST['koniec'].'","%Y-%m-%d") WHERE id='.$_POST['edit'];
+            if($_POST['koniecA']!= NULL){
+            $sql = 'UPDATE projekty SET nazwa="'.$_POST['nazwa'].'", klient_nip="'.$_POST['kont'].'", Data_rozpoczecia=STR_TO_DATE("'.$_POST['startA'].'","%Y-%m-%d"), Data_zakonczenia=STR_TO_DATE("'.$_POST['koniecA'].'","%Y-%m-%d") WHERE id='.$_POST['edit'];
             }else{
-            $sql = 'UPDATE projekty SET nazwa="'.$_POST['nazwa'].'", klient_nip="'.$_POST['kont'].'", Data_rozpoczecia=STR_TO_DATE("'.$_POST['start'].'","%Y-%m-%d") WHERE id='.$_POST['edit'];
+            $sql = 'UPDATE projekty SET nazwa="'.$_POST['nazwa'].'", klient_nip="'.$_POST['kont'].'", Data_rozpoczecia=STR_TO_DATE("'.$_POST['startA'].'","%Y-%m-%d") WHERE id='.$_POST['edit'];
             }
             if ($con->query($sql) === TRUE) {
                 echo "Pomyślnie zaktualizowano dane";
@@ -58,10 +61,10 @@ require_once "connect.php";
             unset($_POST['edit']);
         }
         if(isset($_POST['add'])){
-            if($_POST['koniec']!= NULL){
-            $sql = 'INSERT INTO projekty(nazwa , klient_nip, Data_rozpoczecia, Data_zakonczenia) VALUES("'.$_POST['nazwa'].'", "'.$_POST['kont'].'", STR_TO_DATE("'.$_POST['start'].'","%Y-%m-%d"), STR_TO_DATE("'.$_POST['koniec'].'","%Y-%m-%d"))';
+            if($_POST['koniecA']!= NULL){
+            $sql = 'INSERT INTO projekty(nazwa , klient_nip, Data_rozpoczecia, Data_zakonczenia) VALUES("'.$_POST['nazwa'].'", "'.$_POST['kont'].'", STR_TO_DATE("'.$_POST['startA'].'","%Y-%m-%d"), STR_TO_DATE("'.$_POST['koniec'].'","%Y-%m-%d"))';
             }else{
-            $sql = 'INSERT INTO projekty(nazwa , klient_nip, Data_rozpoczecia) VALUES( "'.$_POST['nazwa'].'", "'.$_POST['kont'].'", STR_TO_DATE("'.$_POST['start'].'","%Y-%m-%d") )';
+            $sql = 'INSERT INTO projekty(nazwa , klient_nip, Data_rozpoczecia) VALUES( "'.$_POST['nazwa'].'", "'.$_POST['kont'].'", STR_TO_DATE("'.$_POST['startA'].'","%Y-%m-%d") )';
             }
             if ($con->query($sql) === TRUE) {
                 echo "Pomyślnie zaktualizowano dane";
@@ -70,8 +73,8 @@ require_once "connect.php";
               }
             unset($_POST['add']);
         }
-        if(isset($_POST['start']) && isset($_POST['koniec']) ){
-            $sql='SELECT id , nazwa ,kontrahenci.kontrahent AS kont , Data_rozpoczecia , Data_zakonczenia FROM projekty inner join kontrahenci on kontrahenci.nip=projekty.klient_nip WHERE Data_rozpoczecia >= STR_TO_DATE("'.$_POST['start'].'","%Y-%m-%d") AND '.'Data_rozpoczecia <= STR_TO_DATE("'.$_POST['koniec'].'","%Y-%m-%d")';
+        if(isset($_SESSION['start']) && isset($_SESSION['koniec']) ){
+            $sql='SELECT id , nazwa ,kontrahenci.kontrahent AS kont , Data_rozpoczecia , Data_zakonczenia FROM projekty inner join kontrahenci on kontrahenci.nip=projekty.klient_nip WHERE Data_rozpoczecia >= STR_TO_DATE("'.$_SESSION['start'].'","%Y-%m-%d") AND '.'Data_rozpoczecia <= STR_TO_DATE("'.$_SESSION['koniec'].'","%Y-%m-%d")';
             $res = mysqli_query($con,$sql);
             while($r = mysqli_fetch_array($res)){
                 echo '<tr><form action="aprojekt.php" method="POST"> <input type="hidden" name="id" value="'.$r['id'].'">';
@@ -95,6 +98,7 @@ require_once "connect.php";
 </body>
 </html>
 <?php
-
+unset($_POST['start']);
+unset($_POST['koniec']);
 mysqli_close($con);
 ?>

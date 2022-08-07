@@ -25,6 +25,22 @@ require_once "connect.php";
     </nav>
     <main>
         <h1>Lista kontrahentów</h1>
+
+        <form action="kont.php" method="post" id="projekt_data">
+        <?php
+        if(!isset($_POST['nipC']) && !isset($_POST['nazwaC'])){
+            echo 'nip:<input type="text" name="nipC">';
+            echo'nazwa:<input type="text" name="nazwaC">';
+            echo'<input type=submit value= "zatwierdź" class="edit">';
+        }
+        else{
+            echo 'nip:<input type="text" name="nipC" value='.$_POST['nipC'].'>';
+            echo'nazwa:<input type="text" name="nazwaC" value='.$_POST['nazwaC'].'>';
+            echo'<input type=submit value= "zatwierdź" class="edit">';
+        }
+        ?>
+        </form>
+
     <table rules=rows>
         <tr>
         <th>NIP</th><th>kontrahent</th><th></th><th></th>
@@ -64,7 +80,14 @@ require_once "connect.php";
             unset($_GET['nip']);
         }
    
+        if(isset($_POST['nipC']) && isset($_POST['nazwaC'])){
+            $res = mysqli_query($con,'Select * FROM kontrahenci WHERE nip LIKE "%'.$_POST['nipC'].'%" AND kontrahent LIKE "%'.$_POST['nazwaC'].'%" ');
+        
+        }
+        else{   
         $res = mysqli_query($con,"Select * FROM kontrahenci");
+        }
+
         while($r = mysqli_fetch_array($res)){
             echo'<tr><form action="akont.php" method="POST"><input type="hidden" name ="nip" value='.$r['nip'].'><input type="hidden" name ="kontrahent" value='.$r['kontrahent'].'>';
             echo '<td>'.$r['nip'].'</td><td>'.$r['kontrahent'].'</td><td><input type ="submit" class="edit" value="edytuj"></td>';
@@ -81,6 +104,8 @@ require_once "connect.php";
 </body>
 </html>
 <?php
+unset($_POST['nipC']);
+unset($_POST['nazwaC']);
 $res->free();
 mysqli_close($con);
 ?>

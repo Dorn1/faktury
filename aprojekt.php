@@ -34,8 +34,8 @@ require_once "connect.php";
             echo'<option value='.$x['nip'].'>'.$x['kontrahent'].'</option>';
         }
     echo'</select></td>';
-    echo '<td><input type="date" name="start" value="'.$res['Data_rozpoczecia'].'"></td>';
-    echo '<td><input type="date" name="koniec" value="'.$res['Data_zakonczenia'].'"></td>';
+    echo '<td><input type="date" name="startA" value="'.$res['Data_rozpoczecia'].'"></td>';
+    echo '<td><input type="date" name="koniecA" value="'.$res['Data_zakonczenia'].'"></td>';
     echo'</tr>';
     }
     else{
@@ -45,8 +45,8 @@ require_once "connect.php";
             echo'<option value='.$x['nip'].'>'.$x['kontrahent'].'</option>';
         }
     echo'</select></td>';
-    echo '<td><input type="date" name="start" value=""></td>';
-    echo '<td><input type="date" name="koniec" value=""></td>';
+    echo '<td><input type="date" name="startA" value=""></td>';
+    echo '<td><input type="date" name="koniecA" value=""></td>';
     echo'</tr>';
     }
     ?>
