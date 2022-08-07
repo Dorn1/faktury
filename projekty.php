@@ -43,10 +43,19 @@ require_once "connect.php";
 
     <table rules=rows>
         <tr>
-            <th>nazwa</th><th>kontrahent</th><th>stan</th><th></th>
+            <th>nazwa</th><th>kontrahent</th><th>stan</th><th></th><th></th>
         </tr>
 
         <?php
+        if(isset($_POST['del'])){
+            $sql ='DELETE FROM projekty WHERE id ='.$_POST['id'];
+            if ($con->query($sql) === TRUE) {
+                echo "Pomyślnie zaktualizowano dane";
+              } else {
+                echo "Error updating record: " . $con->error;
+              }
+            unset($_POST['id']);
+        }
         if(isset($_POST['edit'])){
             if($_POST['koniecA']!= NULL){
             $sql = 'UPDATE projekty SET nazwa="'.$_POST['nazwa'].'", klient_nip="'.$_POST['kont'].'", Data_rozpoczecia=STR_TO_DATE("'.$_POST['startA'].'","%Y-%m-%d"), Data_zakonczenia=STR_TO_DATE("'.$_POST['koniecA'].'","%Y-%m-%d") WHERE id='.$_POST['edit'];
@@ -77,7 +86,7 @@ require_once "connect.php";
             $sql='SELECT id , nazwa ,kontrahenci.kontrahent AS kont , Data_rozpoczecia , Data_zakonczenia FROM projekty inner join kontrahenci on kontrahenci.nip=projekty.klient_nip WHERE Data_rozpoczecia >= STR_TO_DATE("'.$_SESSION['start'].'","%Y-%m-%d") AND '.'Data_rozpoczecia <= STR_TO_DATE("'.$_SESSION['koniec'].'","%Y-%m-%d")';
             $res = mysqli_query($con,$sql);
             while($r = mysqli_fetch_array($res)){
-                echo '<tr><form action="aprojekt.php" method="POST"> <input type="hidden" name="id" value="'.$r['id'].'">';
+                echo '<tr>';
                 echo '<td>'.$r['nazwa'].'</td><td>'.$r['kont'].'</td>';
                 if($r['Data_zakonczenia']!= NULL){
                     echo '<td>zakończony</td>';
@@ -85,13 +94,14 @@ require_once "connect.php";
                 else{
                     echo '<td>w trakcie</td>';
                 }
-                echo '<td><input type="submit" class="edit" value="edytuj"></td></form>';
+                echo '<td><form action="aprojekt.php" method="POST"> <input type="hidden" name="id" value="'.$r['id'].'"><input type="submit" class="edit" value="edytuj"></td></form>';
+                echo '<td><form action="projekty.php" method="POST"> <input type="hidden" name="id" value="'.$r['id'].'"><input type="submit" name="del" class="edit" value="usuń"></td></form>';
                 echo '</tr>';
             }
             
         }
         ?>
-        <tr><form action="aprojekt.php" method="POST"><td colspan="4"><input type="submit" class="edit" value="dodaj"></td></form></tr>
+        <tr><form action="aprojekt.php" method="POST"><td colspan="5"><input type="submit" class="edit" value="dodaj"></td></form></tr>
     </table>
     </main>
   
