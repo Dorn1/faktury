@@ -1,6 +1,8 @@
 <?php
 session_start();
 require_once "connect.php";
+$_SESSION['koniec'] = date('Y-m-d') ;
+$_SESSION['start'] = date('2022-06-01') ;
 ?>
 <!DOCTYPE html>
 <html lang="pl">

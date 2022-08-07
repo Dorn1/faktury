@@ -22,20 +22,16 @@ require_once "connect.php";
     <main>
         <h1>Lista projektów</h1>
         
-        <form action="projekty.php" method="post" id="projekt_data">
+        <form action="projekty.php" method="post" id="data">
         <?php
         if(isset($_POST['start']) && isset($_POST['koniec'])){
             $_SESSION['koniec'] = $_POST['koniec'];
             $_SESSION['start'] = $_POST['start'];
         }
-        if(!isset($_SESSION['start']) && !isset($_SESSION['koniec'])){
-             echo 'od:<input type="date" name="start" >';
-             echo'do:<input type="date" name="koniec" >';
-        }
-        else{
-            echo 'od:<input type="date" name="start" value='.$_SESSION['start'].'>';
-            echo'do:<input type="date" name="koniec" value='.$_SESSION['koniec'].'>';
-        }
+        
+        echo 'od:<input type="date" name="start" value='.$_SESSION['start'].'>';
+        echo'do:<input type="date" name="koniec" value='.$_SESSION['koniec'].'>';
+        
         ?>
         <input type=submit value= "zatwierdź" class="edit">
         </form>
@@ -55,6 +51,7 @@ require_once "connect.php";
                 echo "Error updating record: " . $con->error;
               }
             unset($_POST['id']);
+            unset($_POST['del']);
         }
         if(isset($_POST['edit'])){
             if($_POST['koniecA']!= NULL){

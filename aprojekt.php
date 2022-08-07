@@ -29,11 +29,12 @@ require_once "connect.php";
     $r1=mysqli_query($con, $sql);
     $res= mysqli_fetch_array($r1);
     echo'<tr><td><input type="hidden" name="edit" value="'.$res['id'].'"><input type="text" name="nazwa" value='.$res['nazwa'].'></td>';
-    echo'<td><select name="kont">';
+    echo'<td><input list="kont" name = "kont">';
+    echo'<datalist id="kont">';
     while($x = mysqli_fetch_array($r2)){
             echo'<option value='.$x['nip'].'>'.$x['kontrahent'].'</option>';
         }
-    echo'</select></td>';
+    echo'</datalist></td>';
     echo '<td><input type="date" name="startA" value="'.$res['Data_rozpoczecia'].'"></td>';
     echo '<td><input type="date" name="koniecA" value="'.$res['Data_zakonczenia'].'"></td>';
     echo'</tr>';

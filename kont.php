@@ -26,7 +26,7 @@ require_once "connect.php";
     <main>
         <h1>Lista kontrahentów</h1>
 
-        <form action="kont.php" method="post" id="projekt_data">
+        <form action="kont.php" method="post" id="data">
         <?php
         if(!isset($_POST['nipC']) && !isset($_POST['nazwaC'])){
             echo 'nip:<input type="text" name="nipC">';
