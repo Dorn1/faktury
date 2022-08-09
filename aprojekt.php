@@ -25,12 +25,12 @@ require_once "connect.php";
     $sql2='SELECT * FROM kontrahenci';
     $r2=mysqli_query($con, $sql2);
     if(isset($_POST['id'])){
-    $sql='SELECT id , nazwa ,kontrahenci.kontrahent AS kont , Data_rozpoczecia , Data_zakonczenia FROM projekty inner join kontrahenci on kontrahenci.nip=projekty.klient_nip WHERE id='.$_POST['id'];
+    $sql='SELECT id , nazwa ,kontrahenci.kontrahent AS kont ,kontrahenci.nip AS nip, Data_rozpoczecia , Data_zakonczenia FROM projekty inner join kontrahenci on kontrahenci.nip=projekty.klient_nip WHERE id='.$_POST['id'];
     $r1=mysqli_query($con, $sql);
     $res= mysqli_fetch_array($r1);
     echo'<tr><td><input type="hidden" name="edit" value="'.$res['id'].'"><input type="text" name="nazwa" value='.$res['nazwa'].'></td>';
-    echo'<td><input list="kont" name = "kont">';
-    echo'<datalist id="kont">';
+    echo'<td><input list="kont" name = "kont" value="'.$res['nip'].'">';
+    echo'<datalist id="kont" >';
     while($x = mysqli_fetch_array($r2)){
             echo'<option value='.$x['nip'].'>'.$x['kontrahent'].'</option>';
         }
@@ -41,11 +41,12 @@ require_once "connect.php";
     }
     else{
         echo'<tr><td><input type="hidden" name="add" value="dodaj"><input type="text" name="nazwa" value=></td>';
-        echo'<td><select name="kont">';
-    while($x = mysqli_fetch_array($r2)){
-            echo'<option value='.$x['nip'].'>'.$x['kontrahent'].'</option>';
-        }
-    echo'</select></td>';
+        echo'<td><input list="kont" name = "kont">';
+        echo'<datalist id="kont" >';
+        while($x = mysqli_fetch_array($r2)){
+                echo'<option value='.$x['nip'].'>'.$x['kontrahent'].'</option>';
+            }
+        echo'</datalist></td>';
     echo '<td><input type="date" name="startA" value=""></td>';
     echo '<td><input type="date" name="koniecA" value=""></td>';
     echo'</tr>';

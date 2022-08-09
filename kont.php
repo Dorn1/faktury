@@ -29,13 +29,13 @@ require_once "connect.php";
         <form action="kont.php" method="post" id="data">
         <?php
         if(!isset($_POST['nipC']) && !isset($_POST['nazwaC'])){
-            echo 'nip:<input type="text" name="nipC">';
-            echo'nazwa:<input type="text" name="nazwaC">';
+            echo 'nip:<input type="text" name="nipC">    ';
+            echo'nazwa:<input type="text" name="nazwaC"> ';
             echo'<input type=submit value= "zatwierdź" class="edit">';
         }
         else{
-            echo 'nip:<input type="text" name="nipC" value='.$_POST['nipC'].'>';
-            echo'nazwa:<input type="text" name="nazwaC" value='.$_POST['nazwaC'].'>';
+            echo 'nip:<input type="text" name="nipC" value='.$_POST['nipC'].'> ';
+            echo'nazwa:<input type="text" name="nazwaC" value='.$_POST['nazwaC'].'> ';
             echo'<input type=submit value= "zatwierdź" class="edit">';
         }
         ?>
