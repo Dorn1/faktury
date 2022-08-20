@@ -21,10 +21,13 @@ require_once "connect.php";
     echo '<form action="afaktura.php" method="POST" style ="float: right; margin-top: 2px"><input type="hidden" value="'.$_POST['numerF'].'" name="numerF" ><input class="edit" type="submit" value="powrót"></form>';
     ?>
     <br><br>
-        <table rules=rows >
+    <table rules=rows >
         <tr><th>Produkt</th><th>Wartość NETTO</th><th>%VAT</th><th>ilość</th><th>projekt</th><th></th><th></th></tr>
+    
+    
     </table>
     
+
 
 
     </main>

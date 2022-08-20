@@ -5,12 +5,12 @@ if(isset($_POST['numerF'])){
     $control=2115;
 }
 if(isset($_POST['edit'])){
-    $sql ='SELECT * FROM faktury WHERE nr_FAKTURY ='.$_POST['numerF'];
+    $sql ='SELECT * FROM faktury WHERE nr_FAKTURY ="'.$_POST['numerF'].'"';
         if($con->query($sql)!=NULL){
-            $sql='UPDATE faktury SET nr_Faktury ="'.$_POST['numerF'].'", nip_kontrahenta="'.$_POST['kont'].'", dataWystawienia=STR_TO_DATE("'.$_POST['data'].'","%Y-%m-%d","%Y-%m-%d") WHERE nr_Faktury ="'.$_POST['numer_old'].'"';
+            $sql='UPDATE faktury SET nr_Faktury ="'.$_POST['numerF'].'", nip_kontrahenta="'.$_POST['kont'].'", dataWystawienia=STR_TO_DATE("'.$_POST['data'].'","%Y-%m-%d") WHERE nr_Faktury ="'.$_POST['numer_old'].'"';
         }
         else{
-            $sql='INSERT INTO faktury(nr_Faktury,nip_kontrahenta,dataWystawienia) VALUES("'.$_POST['numerF'].'","'.$_POST['kont'].'",STR_TO_DATE("'.$_POST['data'].'","%Y-%m-%d"))';
+            $sql='INSERT INTO faktury(nr_Faktury,nip_kontrahenta,dataWystawienia) VALUES("'.$_POST['numerF'].'","'.$_POST['kont'].'",STR_TO_DATE("'.$_POST['data'].'"","%Y-%m-%d"))';
         }
         
         $con->query($sql);
