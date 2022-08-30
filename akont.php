@@ -23,7 +23,7 @@ require_once "connect.php";
     </tr>
     <?php
     if($_POST['nip']!="" && $_POST['kontrahent']!=""){
-    echo '<tr><input type="hidden" name="nip_old" value='.$_POST['nip'].'><td><input type="text" name="nip_new" maxlength="10" value='.$_POST['nip'].'></td><td><input type="text" name="kontrahent" value='.$_POST['kontrahent'].'></td></tr>';
+    echo '<tr><input type="hidden" name="nip_old" value='.$_POST['nip'].'><td>'.$_POST['nip'].'</td><td><input type="text" name="kontrahent" value='.$_POST['kontrahent'].'></td></tr>';
     }
     else{
         echo '<tr><input type="hidden" name="check" value="check"><td><input type="text" name="nip_new" maxlength="10" value='.$_POST['nip'].'></td><td><input type="text" name="kontrahent" value='.$_POST['kontrahent'].'></td></tr>';
