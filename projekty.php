@@ -39,12 +39,12 @@ require_once "connect.php";
 
     <table rules=rows>
         <tr>
-            <th>nazwa</th><th>kontrahent</th><th>stan</th><th></th><th></th>
+            <th>nazwa</th><th>kontrahent</th><th>stan</th><th>Wartość Całkowita</th><th></th><th></th>
         </tr>
 
         <?php
         if(isset($_POST['del'])){
-            $sql ='DELETE FROM projekty WHERE id ='.$_POST['id'];
+            $sql ='DELETE FROM projekty WHERE id_projektu ='.$_POST['id'];
             if ($con->query($sql) === TRUE) {
                 echo "Pomyślnie zaktualizowano dane";
               } else {
@@ -55,9 +55,9 @@ require_once "connect.php";
         }
         if(isset($_POST['edit'])){
             if($_POST['koniecA']!= NULL){
-            $sql = 'UPDATE projekty SET nazwa="'.$_POST['nazwa'].'", klient_nip="'.$_POST['kont'].'", Data_rozpoczecia=STR_TO_DATE("'.$_POST['startA'].'","%Y-%m-%d"), Data_zakonczenia=STR_TO_DATE("'.$_POST['koniecA'].'","%Y-%m-%d") WHERE id='.$_POST['edit'];
+            $sql = 'UPDATE projekty SET nazwa="'.$_POST['nazwa'].'", klient_nip="'.$_POST['kont'].'", Data_rozpoczecia=STR_TO_DATE("'.$_POST['startA'].'","%Y-%m-%d"), Data_zakonczenia=STR_TO_DATE("'.$_POST['koniecA'].'","%Y-%m-%d") WHERE id_projektu='.$_POST['edit'];
             }else{
-            $sql = 'UPDATE projekty SET nazwa="'.$_POST['nazwa'].'", klient_nip="'.$_POST['kont'].'", Data_rozpoczecia=STR_TO_DATE("'.$_POST['startA'].'","%Y-%m-%d") WHERE id='.$_POST['edit'];
+            $sql = 'UPDATE projekty SET nazwa="'.$_POST['nazwa'].'", klient_nip="'.$_POST['kont'].'", Data_rozpoczecia=STR_TO_DATE("'.$_POST['startA'].'","%Y-%m-%d") WHERE id_projektu='.$_POST['edit'];
             }
             if ($con->query($sql) === TRUE) {
                 echo "Pomyślnie zaktualizowano dane";
@@ -80,7 +80,7 @@ require_once "connect.php";
             unset($_POST['add']);
         }
         if(isset($_SESSION['start']) && isset($_SESSION['koniec']) ){
-            $sql='SELECT id , nazwa ,kontrahenci.kontrahent AS kont , Data_rozpoczecia , Data_zakonczenia FROM projekty inner join kontrahenci on kontrahenci.nip=projekty.klient_nip WHERE Data_rozpoczecia >= STR_TO_DATE("'.$_SESSION['start'].'","%Y-%m-%d") AND '.'Data_rozpoczecia <= STR_TO_DATE("'.$_SESSION['koniec'].'","%Y-%m-%d")';
+            $sql='SELECT id_projektu , nazwa ,kontrahenci.kontrahent AS kont , Data_rozpoczecia , Data_zakonczenia FROM projekty inner join kontrahenci on kontrahenci.nip=projekty.klient_nip WHERE Data_rozpoczecia >= STR_TO_DATE("'.$_SESSION['start'].'","%Y-%m-%d") AND '.'Data_rozpoczecia <= STR_TO_DATE("'.$_SESSION['koniec'].'","%Y-%m-%d")';
             $res = mysqli_query($con,$sql);
             while($r = mysqli_fetch_array($res)){
                 echo '<tr>';
@@ -91,14 +91,23 @@ require_once "connect.php";
                 else{
                     echo '<td>w trakcie</td>';
                 }
-                echo '<td><form action="aprojekt.php" method="POST"> <input type="hidden" name="id" value="'.$r['id'].'"><input type="submit" class="edit" value="edytuj"></td></form>';
-                echo '<td><form action="projekty.php" method="POST"> <input type="hidden" name="id" value="'.$r['id'].'"><input type="submit" name="del" class="edit" value="usuń"></td></form>';
+                $sql2 = 'SELECT SUM(wartosc) AS wartoscC FROM pozycje WHERE projekt_id ='.$r['id_projektu'];
+                $res2= mysqli_query($con,$sql2);
+                if($x=mysqli_fetch_array($res2)){
+                    echo '<td>';
+                    if($x['wartoscC']===NULL){
+                        echo '0';
+                    }
+                    echo $x['wartoscC'].' zł</td>';
+                }
+                echo '<td><form action="aprojekt.php" method="POST"> <input type="hidden" name="id" value="'.$r['id_projektu'].'"><input type="submit" class="edit" value="edytuj"></td></form>';
+                echo '<td><form action="projekty.php" method="POST"> <input type="hidden" name="id" value="'.$r['id_projektu'].'"><input type="submit" name="del" class="edit" value="usuń"></td></form>';
                 echo '</tr>';
             }
             
         }
         ?>
-        <tr><form action="aprojekt.php" method="POST"><td colspan="5"><input type="submit" class="edit" value="dodaj"></td></form></tr>
+        <tr><form action="aprojekt.php" method="POST"><td colspan="6"><input type="submit" class="edit" value="dodaj"></td></form></tr>
     </table>
     </main>
   

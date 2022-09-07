@@ -25,30 +25,32 @@ require_once "connect.php";
     $sql2='SELECT * FROM kontrahenci';
     $r2=mysqli_query($con, $sql2);
     if(isset($_POST['id'])){
-    $sql='SELECT id , nazwa ,kontrahenci.kontrahent AS kont ,kontrahenci.nip AS nip, Data_rozpoczecia , Data_zakonczenia FROM projekty inner join kontrahenci on kontrahenci.nip=projekty.klient_nip WHERE id='.$_POST['id'];
+    $sql='SELECT id_projektu , nazwa ,kontrahenci.kontrahent AS kont ,kontrahenci.nip AS nip, Data_rozpoczecia , Data_zakonczenia FROM projekty inner join kontrahenci on kontrahenci.nip=projekty.klient_nip WHERE id_projektu='.$_POST['id'];
     $r1=mysqli_query($con, $sql);
     $res= mysqli_fetch_array($r1);
-    echo'<tr><td><input type="hidden" name="edit" value="'.$res['id'].'"><input type="text" name="nazwa" value='.$res['nazwa'].'></td>';
-    echo'<td><input list="kont" name = "kont" value="'.$res['nip'].'">';
+    echo'<tr><td><input type="hidden" name="edit" value="'.$res['id_projektu'].'">';
+    echo'<input type="text" name="nazwa" value='.$res['nazwa'].' required></td>';
+    echo'<td><input list="kont" name = "kont" value="'.$res['nip'].'" required>';
     echo'<datalist id="kont" >';
     while($x = mysqli_fetch_array($r2)){
             echo'<option value='.$x['nip'].'>'.$x['kontrahent'].'</option>';
         }
     echo'</datalist></td>';
-    echo '<td><input type="date" name="startA" value="'.$res['Data_rozpoczecia'].'"></td>';
+    echo '<td><input type="date" name="startA" value="'.$res['Data_rozpoczecia'].'" required></td>';
     echo '<td><input type="date" name="koniecA" value="'.$res['Data_zakonczenia'].'"></td>';
     echo'</tr>';
     }
     else{
-        echo'<tr><td><input type="hidden" name="add" value="dodaj"><input type="text" name="nazwa" value=></td>';
+        echo'<tr><td><input type="hidden" name="add" value="dodaj" required>';
+        echo '<input type="text" name="nazwa"  required></td>';
         echo'<td><input list="kont" name = "kont">';
         echo'<datalist id="kont" >';
         while($x = mysqli_fetch_array($r2)){
                 echo'<option value='.$x['nip'].'>'.$x['kontrahent'].'</option>';
             }
         echo'</datalist></td>';
-    echo '<td><input type="date" name="startA" value=""></td>';
-    echo '<td><input type="date" name="koniecA" value=""></td>';
+    echo '<td><input type="date" name="startA" required></td>';
+    echo '<td><input type="date" name="koniecA"></td>';
     echo'</tr>';
     }
     ?>

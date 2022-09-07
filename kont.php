@@ -28,59 +28,82 @@ require_once "connect.php";
 
         <form action="kont.php" method="post" id="data">
         <?php
+        // wybór danych do filtrowania
         if(!isset($_POST['nipC']) && !isset($_POST['nazwaC'])){
             echo 'nip:<input type="text" name="nipC">    ';
-            echo'nazwa:<input type="text" name="nazwaC"> ';
-            echo'<input type=submit value= "zatwierdź" class="edit">';
+            echo 'nazwa:<input type="text" name="nazwaC"> ';
+            echo 'miasto:<input type="text" name="miastoC"> ';
+            echo 'ulica:<input type="text" name="ulicaC">';
+            echo' <input type=submit value= "zatwierdź" class="edit">';
         }
         else{
             echo 'nip:<input type="text" name="nipC" value='.$_POST['nipC'].'> ';
             echo'nazwa:<input type="text" name="nazwaC" value='.$_POST['nazwaC'].'> ';
-            echo'<input type=submit value= "zatwierdź" class="edit">';
+            echo 'miasto:<input type="text" name="miastoC" value='.$_POST['miastoC'].'> ';
+            echo 'ulica:<input type="text" name="ulicaC" value='.$_POST['ulicaC'].'>';
+            echo' <input type=submit value= "zatwierdź" class="edit">';
         }
         ?>
         </form>
 
     <table rules=rows>
         <tr>
-        <th>NIP</th><th>kontrahent</th></th></th><th></th><th></th>
+        <th>NIP</th><th>kontrahent</th><th>Miasto i kod pocztowy</th><th>Ulica i numer</th><th></th><th></th>
     </tr>
     <?php
+        // mechanizm edycji danych
         if(isset($_POST['nip_old'])){
         $sql = 'UPDATE kontrahenci SET kontrahent = "'.$_POST['kontrahent'].'" WHERE nip="'.$_POST['nip_old'].'"';
         
         if ($con->query($sql) === TRUE) {
             echo "Pomyślnie zaktualizowano dane";
-            header('Refresh: 2; URL=kont.php');
+            header('Refresh: 10; URL=kont.php');
           } else {
             echo "Error updating record: " . $con->error;
           }
           unset($_POST['nip_old']);
           unset($sql);
         }
+        // mechanizm dodawania
         if(isset($_POST['check'])){
             $sql = 'INSERT INTO kontrahenci (nip, kontrahent) VALUES ("'.$_POST['nip_new'].'","'.$_POST['kontrahent'].'")';
             unset($_POST['check']);
             if ($con->query($sql) === TRUE) {
                 echo "Pomyślnie dodane dane";
-                header('Refresh: 2; URL=kont.php');
+                header('Refresh: 10; URL=kont.php');
               } else {
                 echo "Error adding record: " . $con->error;
               }
               unset($sql);
         }
+        // mechanizm usuwania
         if(isset($_GET['nip'])){
-            $sql="DELETE FROM kontrahenci WHERE nip=".$_GET['nip'];
-            if ($con->query($sql) === TRUE) {
-                echo "Pomyślnie usunięto dane";
-                header('Refresh: 2; URL=kont.php');
-              } else {
-                echo "Error adding record: " . $con->error;
-              }
-              unset($sql);
+            $sql = 'SELECT count(*) AS ilosc FROM faktury WHERE nip_kontrahenta ="'.$_GET['nip'].'"';
+            $sql2 = 'SELECT count(*) AS ilosc FROM projekty WHERE klient_nip ="'.$_GET['nip'].'"';
+            $res1 =$con->query($sql);
+            $res2=$con->query($sql2);
+            $ilosc=0;
+            if($x = mysqli_fetch_array($res1) AND $x2 = mysqli_fetch_array($res2)){
+                $ilosc = $x['ilosc']+$x2['ilosc'];
+            }
+            if($ilosc===0){
+                $sql='DELETE FROM kontrahenci WHERE nip="'.$_GET['nip'].'"';
+                if ($con->query($sql) === TRUE) {
+                    echo "Pomyślnie usunięto dane";
+                } else {
+                    echo "Error adding record: " . $con->error;
+                }
+            }
+            else{
+                echo 'nie można usunąć kontrahenta ponieważ jest powiązany z następującą ilością projektów lub faktur w bazie: '.$ilosc;
+            }
+            unset($sql);
             unset($_GET['nip']);
+            
+            header('Refresh: 2; URL=kont.php');
         }
    
+        // mechanizm filtrowania
         if(isset($_POST['nipC']) && isset($_POST['nazwaC'])){
             $res = mysqli_query($con,'Select * FROM kontrahenci WHERE nip LIKE "%'.$_POST['nipC'].'%" AND kontrahent LIKE "%'.$_POST['nazwaC'].'%" ');
         
@@ -88,16 +111,19 @@ require_once "connect.php";
         else{   
         $res = mysqli_query($con,"Select * FROM kontrahenci");
         }
-
+        // tablica danych
         while($r = mysqli_fetch_array($res)){
-            echo'<tr><form action="akont.php" method="POST"><input type="hidden" name ="nip" value='.$r['nip'].'><input type="hidden" name ="kontrahent" value='.$r['kontrahent'].'>';
-            echo '<td>'.$r['nip'].'</td><td>'.$r['kontrahent'].'</td><td><input type ="submit" class="edit" value="edytuj"></td>';
-            echo'</form><td><button type="button" onclick="usunk('.$r['nip'].')" class="edit">usuń</button></td></tr>';
+            echo '<tr><form action="akont.php" method="POST"><input type="hidden" name ="nip" value='.$r['nip'].'><input type="hidden" name ="kontrahent" value='.$r['kontrahent'].'>';
+            echo '<td>'.$r['nip'].'</td><td>'.$r['kontrahent'].'</td>';
+            echo '<td></td>';
+            echo '<td></td>';
+            echo '<td><input type ="submit" class="edit" value="edytuj"></td></form>';
+            echo '<td><button type="button" onclick="usunk('.$r['nip'].')" class="edit">usuń</button></td></tr>';
         }
 
     ?>
     <tr>
-        <td colspan="4"><form action="akont.php" method="POST"><input type="hidden" name ="nip" value=''><input type="hidden" name ="kontrahent" value=''><input type ="submit" class="edit" value="dodaj kontrahenta"></form></td>
+        <td colspan="6"><form action="akont.php" method="POST"><input type="hidden" name ="nip" value=''><input type="hidden" name ="kontrahent" value=''><input type ="submit" class="edit" value="dodaj kontrahenta"></form></td>
     </tr>
     </table>
     </main>

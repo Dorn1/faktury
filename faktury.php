@@ -37,13 +37,14 @@ require_once "connect.php";
 
         <table rules=rows>
         <tr>
-            <th>numer</th><th>kontrahent</th><th>Data wystawienia</th><th></th><th></th>
+            <th>numer</th><th>kontrahent</th><th>Data wystawienia</th><th>Wartość całkowita</th><th></th><th></th>
         </tr>
 
         <?php
             if(isset($_POST['del'])){
                 $sql = 'DELETE FROM faktury WHERE nr_Faktury ="'.$_POST['numerF'].'"';
-                if ($con->query($sql) === TRUE) {
+                $sql2 ='DELETE FROM pozycje WHERE nr_Faktury ="'.$_POST['numerF'].'"';
+                if ($con->query($sql) === TRUE AND $con->query($sql2) === TRUE ) {
                     echo "Pomyślnie zaktualizowano dane";
                   } else {
                     echo "Error updating record: " . $con->error;
@@ -56,8 +57,18 @@ require_once "connect.php";
             $sql='SELECT faktury.nr_faktury AS numerF, kontrahenci.kontrahent AS kont, dataWystawienia AS dataW FROM faktury INNER JOIN kontrahenci ON faktury.nip_kontrahenta = kontrahenci.nip';
             $res = mysqli_query($con,$sql);
             while($r=mysqli_fetch_array($res)){
+                $sql2 = 'SELECT SUM(wartosc) AS wartoscC FROM pozycje WHERE nr_Faktury ="'.$r['numerF'].'"';
+                $res2= mysqli_query($con,$sql2);
                 echo '<tr>';
                 echo '<td>'.$r['numerF'].'</td><td>'.$r['kont'].'</td><td>'.$r['dataW'].'</td>';
+                if($r2=mysqli_fetch_array($res2)){
+                    
+                    echo '<td>';
+                    if($r2['wartoscC']===NULL){
+                        echo '0';
+                    }
+                    echo $r2['wartoscC'].' zł</td>';
+                }
                 echo '<td><form action="afaktura.php" method="POST"> <input type="hidden" name="numerF" value="'.$r['numerF'].'"><input type="submit" class="edit" value="edytuj"></td></form>';
                 echo '<td><form action="faktury.php" method="POST"> <input type="hidden" name="numerF" value="'.$r['numerF'].'"><input type="submit" name="del" class="edit" value="usuń"></td></form>';
                 
@@ -65,7 +76,7 @@ require_once "connect.php";
             }
         
         ?>
-        <tr><form action="afaktura.php" method="POST"><td colspan="5"><input type="submit" class="edit" value="dodaj"></td></form></tr>
+        <tr><form action="afaktura.php" method="POST"><td colspan="6"><input type="submit" class="edit" value="dodaj"></td></form></tr>
         </table>
 
 

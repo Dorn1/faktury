@@ -3,18 +3,21 @@ session_start();
 require_once "connect.php";
 if(isset($_POST['numerP'])){
     $sql='DELETE FROM pozycje WHERE id='.$_POST['numerP'];
-    unest($_POST['numerP']);
+    $con->query($sql);
+    unset($_POST['numerP']);
 }
 if(isset($_POST['edit'])){
-    $sql ='SELECT * FROM faktury WHERE nr_FAKTURY ="'.$_POST['numerF'].'"';
-        if($con->query($sql)!=NULL){
-            $sql='UPDATE faktury SET nr_Faktury ="'.$_POST['numerF'].'", nip_kontrahenta="'.$_POST['kont'].'", dataWystawienia=STR_TO_DATE("'.$_POST['data'].'","%Y-%m-%d") WHERE nr_Faktury ="'.$_POST['numer_old'].'"';
+        if(isset($_POST['numer_old'])){
+            $sql='UPDATE faktury SET nr_Faktury ="'.$_POST['numerF'].'", nip_kontrahenta="'.$_POST['kont'].'", dataWystawienia=STR_TO_DATE("'.$_POST['data'].'","%Y-%m-%d") WHERE nr_Faktury ="'.$_POST['numer_old'].'"';            
+            $con->query($sql);
+            $sql ='UPDATE pozycje SET nr_Faktury ="'.$_POST['numerF'].'" WHERE nr_Faktury ="'.$_POST['numer_old'].'"';
+            $con->query($sql);
         }
         else{
-            $sql='INSERT INTO faktury(nr_Faktury,nip_kontrahenta,dataWystawienia) VALUES("'.$_POST['numerF'].'","'.$_POST['kont'].'",STR_TO_DATE("'.$_POST['data'].'"","%Y-%m-%d"))';
+                $sql='INSERT INTO faktury(nr_Faktury,nip_kontrahenta,dataWystawienia) VALUES("'.$_POST['numerF'].'","'.$_POST['kont'].'",STR_TO_DATE("'.$_POST['data'].'","%Y-%m-%d"))';
+                $con->query($sql);
         }
         
-        $con->query($sql);
         unset($_POST['edit']);
 }
 if(isset($_POST['editP'])){
@@ -72,14 +75,14 @@ elseif(isset($_POST['addP'])){
         else{
             $sql = 'SELECT * FROM kontrahenci';
             $r2=mysqli_query($con, $sql);
-            echo '<td><input type="text" name = "numerF"></td>';
-            echo'<td><input list="kont" name = "kont">';
+            echo '<td><input type="text" name = "numerF" required></td>';
+            echo'<td><input list="kont" name = "kont" required>';
             echo'<datalist id="kont" >';
             while($x = mysqli_fetch_array($r2)){
                 echo'<option value='.$x['nip'].'>'.$x['kontrahent'].'</option>';
             }
             echo'</datalist></td>';
-            echo '<td><input type="date" name="data"></td>';
+            echo '<td><input type="date" name="data" required></td>';
         }
     
     ?>
@@ -94,11 +97,11 @@ elseif(isset($_POST['addP'])){
         echo'<br><br>';
 
         echo'<table rules=rows>';
-        echo'<tr><th>Produkt</th><th>Wartość NETTO</th><th>%VAT</th><th>ilość</th><th>projekt</th><th>Wartość całkowita</th><th></th><th></th></tr>';
-        $sql ='SELECT * FROM pozycje inner join projekty on projekty.id = pozycje.projekt_id inner join kontrahenci on projekty.klient_nip = kontrahenci.nip WHERE nr_Faktury ="'.$_POST['numerF'].'"';
+        echo'<tr><th>Produkt</th><th>Cena jednostkowa(zł)</th><th>%VAT</th><th>ilość</th><th>projekt</th><th>Wartość całkowita</th><th></th><th></th></tr>';
+        $sql ='SELECT * FROM pozycje inner join projekty on projekty.id_projektu = pozycje.projekt_id inner join kontrahenci on projekty.klient_nip = kontrahenci.nip WHERE nr_Faktury ="'.$_POST['numerF'].'"';
         $r=mysqli_query($con, $sql);
         while($x = mysqli_fetch_array($r)){
-            echo '<tr><td>'.$x['nazwaProduktu'].$x['id'].'</td><td>'.$x['NETTO'].'</td><td>'.$x['VAT'].'</td><td>'.$x['ilosc'].'</td><td>'.$x['nazwa'].'('.$x['Data_rozpoczecia'].', '.$x['kontrahent'].')</td><td>'.$x['wartosc'].'</td><td><form action="aprodukt.php" method="POST"><input type="hidden" name ="projekt" value="'.$x['projekt_id'].'"><input type="hidden" name="numerP" value="'.$x['id'].'"><input type="hidden" name="numerF" value="'.$_POST['numerF'].'"><input type="submit" class="edit" value="edytuj"></form></td><td><form action="afaktura" method="POST"><input type="hidden" name="numerF" value="'.$_POST['numerF'].'"><input type="hidden" name="numerP" value="'.$x['id'].'"><input type="submit" class="edit" value="usuń"></form></td></tr>';    
+            echo '<tr><td>'.$x['nazwaProduktu'].$x['id'].'</td><td>'.$x['NETTO'].'</td><td>'.$x['VAT'].'</td><td>'.$x['ilosc'].'</td><td>'.$x['nazwa'].'('.$x['Data_rozpoczecia'].', '.$x['kontrahent'].')</td><td>'.$x['wartosc'].'</td><td><form action="aprodukt.php" method="POST"><input type="hidden" name ="projekt" value="'.$x['projekt_id'].'"><input type="hidden" name="numerP" value="'.$x['id'].'"><input type="hidden" name="numerF" value="'.$_POST['numerF'].'"><input type="submit" class="edit" value="edytuj"></form></td><td><form action="afaktura.php" method="POST"><input type="hidden" name="numerF" value="'.$_POST['numerF'].'"><input type="hidden" name="numerP" value="'.$x['id'].'"><input type="submit" class="edit" value="usuń"></form></td></tr>';    
         }
         echo'<tr><form action="aprodukt.php" method="POST"><td colspan="8"><input type="submit" class="edit" value="dodaj"></td><input type="hidden" name="numerF" value="'.$_POST['numerF'].'"></tr>';
         
