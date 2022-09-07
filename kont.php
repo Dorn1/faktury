@@ -48,12 +48,12 @@ require_once "connect.php";
 
     <table rules=rows>
         <tr>
-        <th>NIP</th><th>kontrahent</th><th>Miasto i kod pocztowy</th><th>Ulica i numer</th><th></th><th></th>
+        <th>NIP</th><th>kontrahent</th><th>Miasto,kod pocztowy</th><th>Ulica,numer</th><th></th><th></th>
     </tr>
     <?php
         // mechanizm edycji danych
         if(isset($_POST['nip_old'])){
-        $sql = 'UPDATE kontrahenci SET kontrahent = "'.$_POST['kontrahent'].'" WHERE nip="'.$_POST['nip_old'].'"';
+        $sql = 'UPDATE kontrahenci SET kontrahent = "'.$_POST['kontrahent'].'", miasto ="'.$_POST['miasto'].'", ulica="'.$_POST['ulica'].'" WHERE nip="'.$_POST['nip_old'].'"';
         
         if ($con->query($sql) === TRUE) {
             echo "Pomyślnie zaktualizowano dane";
@@ -66,7 +66,7 @@ require_once "connect.php";
         }
         // mechanizm dodawania
         if(isset($_POST['check'])){
-            $sql = 'INSERT INTO kontrahenci (nip, kontrahent) VALUES ("'.$_POST['nip_new'].'","'.$_POST['kontrahent'].'")';
+            $sql = 'INSERT INTO kontrahenci (nip, kontrahent,miasto,ulica) VALUES ("'.$_POST['nip_new'].'","'.$_POST['kontrahent'].'","'.$_POST['miasto'].'","'.$_POST['ulica'].'")';
             unset($_POST['check']);
             if ($con->query($sql) === TRUE) {
                 echo "Pomyślnie dodane dane";
@@ -105,7 +105,7 @@ require_once "connect.php";
    
         // mechanizm filtrowania
         if(isset($_POST['nipC']) && isset($_POST['nazwaC'])){
-            $res = mysqli_query($con,'Select * FROM kontrahenci WHERE nip LIKE "%'.$_POST['nipC'].'%" AND kontrahent LIKE "%'.$_POST['nazwaC'].'%" ');
+            $res = mysqli_query($con,'Select * FROM kontrahenci WHERE nip LIKE "%'.$_POST['nipC'].'%" AND kontrahent LIKE "%'.$_POST['nazwaC'].'%" AND ulica LIKE "%'.$_POST['ulicaC'].'%" AND miasto LIKE "%'.$_POST['miastoC'].'%"');
         
         }
         else{   
@@ -115,8 +115,8 @@ require_once "connect.php";
         while($r = mysqli_fetch_array($res)){
             echo '<tr><form action="akont.php" method="POST"><input type="hidden" name ="nip" value='.$r['nip'].'><input type="hidden" name ="kontrahent" value='.$r['kontrahent'].'>';
             echo '<td>'.$r['nip'].'</td><td>'.$r['kontrahent'].'</td>';
-            echo '<td></td>';
-            echo '<td></td>';
+            echo '<td>'.$r['miasto'].'<input type="hidden" name ="miasto" value='.$r['miasto'].'></td>';
+            echo '<td>'.$r['ulica'].'<input type="hidden" name ="ulica" value='.$r['ulica'].'></td>';
             echo '<td><input type ="submit" class="edit" value="edytuj"></td></form>';
             echo '<td><button type="button" onclick="usunk('.$r['nip'].')" class="edit">usuń</button></td></tr>';
         }
