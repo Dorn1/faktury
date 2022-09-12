@@ -39,10 +39,11 @@ require_once "connect.php";
 
     <table rules=rows>
         <tr>
-            <th>nazwa</th><th>kontrahent</th><th>stan</th><th>Wartość Całkowita</th><th></th><th></th>
+            <th>nazwa</th><th>kontrahent</th><th>stan</th><th>Planowane zakończenie</th><th>Wartość Całkowita</th><th></th><th></th>
         </tr>
 
         <?php
+        //usuwanie danych
         if(isset($_POST['del'])){
             $sql ='DELETE FROM projekty WHERE id_projektu ='.$_POST['id'];
             if ($con->query($sql) === TRUE) {
@@ -53,11 +54,12 @@ require_once "connect.php";
             unset($_POST['id']);
             unset($_POST['del']);
         }
+        //edycja danych
         if(isset($_POST['edit'])){
-            if($_POST['koniecA']!= NULL){
-            $sql = 'UPDATE projekty SET nazwa="'.$_POST['nazwa'].'", klient_nip="'.$_POST['kont'].'", Data_rozpoczecia=STR_TO_DATE("'.$_POST['startA'].'","%Y-%m-%d"), Data_zakonczenia=STR_TO_DATE("'.$_POST['koniecA'].'","%Y-%m-%d") WHERE id_projektu='.$_POST['edit'];
+            if(isset($_POST['koniecA'])){
+            $sql = 'UPDATE projekty SET nazwa="'.$_POST['nazwa'].'", klient_nip="'.$_POST['kont'].'", Data_rozpoczecia=STR_TO_DATE("'.$_POST['startA'].'","%Y-%m-%d"), Data_zakonczenia=STR_TO_DATE("'.date("Y-m-d").'","%Y-%m-%d"), planowane_zakonczenie=STR_TO_DATE("'.$_POST['planowaneA'].'","%Y-%m-%d") WHERE id_projektu='.$_POST['edit'];
             }else{
-            $sql = 'UPDATE projekty SET nazwa="'.$_POST['nazwa'].'", klient_nip="'.$_POST['kont'].'", Data_rozpoczecia=STR_TO_DATE("'.$_POST['startA'].'","%Y-%m-%d") WHERE id_projektu='.$_POST['edit'];
+            $sql = 'UPDATE projekty SET nazwa="'.$_POST['nazwa'].'", klient_nip="'.$_POST['kont'].'", Data_rozpoczecia=STR_TO_DATE("'.$_POST['startA'].'","%Y-%m-%d"), Data_zakonczenia=NULL, planowane_zakonczenie=STR_TO_DATE("'.$_POST['planowaneA'].'","%Y-%m-%d")  WHERE id_projektu='.$_POST['edit'];
             }
             if ($con->query($sql) === TRUE) {
                 echo "Pomyślnie zaktualizowano dane";
@@ -66,6 +68,7 @@ require_once "connect.php";
               }
             unset($_POST['edit']);
         }
+        //wstawianie danych
         if(isset($_POST['add'])){
             if($_POST['koniecA']!= NULL){
             $sql = 'INSERT INTO projekty(nazwa , klient_nip, Data_rozpoczecia, Data_zakonczenia) VALUES("'.$_POST['nazwa'].'", "'.$_POST['kont'].'", STR_TO_DATE("'.$_POST['startA'].'","%Y-%m-%d"), STR_TO_DATE("'.$_POST['koniec'].'","%Y-%m-%d"))';
@@ -79,8 +82,9 @@ require_once "connect.php";
               }
             unset($_POST['add']);
         }
+        //filtrowanie danych
         if(isset($_SESSION['start']) && isset($_SESSION['koniec']) ){
-            $sql='SELECT id_projektu , nazwa ,kontrahenci.kontrahent AS kont , Data_rozpoczecia , Data_zakonczenia FROM projekty inner join kontrahenci on kontrahenci.nip=projekty.klient_nip WHERE Data_rozpoczecia >= STR_TO_DATE("'.$_SESSION['start'].'","%Y-%m-%d") AND '.'Data_rozpoczecia <= STR_TO_DATE("'.$_SESSION['koniec'].'","%Y-%m-%d")';
+            $sql='SELECT id_projektu , nazwa ,kontrahenci.kontrahent AS kont , Data_rozpoczecia , Data_zakonczenia,planowane_zakonczenie FROM projekty inner join kontrahenci on kontrahenci.nip=projekty.klient_nip WHERE Data_rozpoczecia >= STR_TO_DATE("'.$_SESSION['start'].'","%Y-%m-%d") AND '.'Data_rozpoczecia <= STR_TO_DATE("'.$_SESSION['koniec'].'","%Y-%m-%d")';
             $res = mysqli_query($con,$sql);
             while($r = mysqli_fetch_array($res)){
                 echo '<tr>';
@@ -91,6 +95,7 @@ require_once "connect.php";
                 else{
                     echo '<td>w trakcie</td>';
                 }
+                echo '<td>'.$r['planowane_zakonczenie'].'</td>';
                 $sql2 = 'SELECT SUM(wartosc) AS wartoscC FROM pozycje WHERE projekt_id ='.$r['id_projektu'];
                 $res2= mysqli_query($con,$sql2);
                 if($x=mysqli_fetch_array($res2)){
@@ -107,7 +112,7 @@ require_once "connect.php";
             
         }
         ?>
-        <tr><form action="aprojekt.php" method="POST"><td colspan="6"><input type="submit" class="edit" value="dodaj"></td></form></tr>
+        <tr><form action="aprojekt.php" method="POST"><td colspan="7"><input type="submit" class="edit" value="dodaj"></td></form></tr>
     </table>
     </main>
   

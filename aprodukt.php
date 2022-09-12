@@ -29,7 +29,7 @@ require_once "connect.php";
     ?>
     <br><br>
     <table rules=rows >
-        <tr><th>Produkt</th><th>Cena jednostkowa</th><th>%VAT</th><th>ilość</th><th>projekt</th><th>Wartość całkowita</th></tr>
+        <tr><th>Produkt</th><th>Cena jednostkowa</th><th>VAT</th><th>ilość</th><th>projekt</th><th>Wartość całkowita</th></tr>
     <form action="afaktura.php" method="POST">
     <?php
     echo '<input type="hidden" name="numerF" value="'.$_POST['numerF'].'">';
@@ -38,9 +38,13 @@ require_once "connect.php";
             $r = mysqli_query($con,$sql);
             while($x = mysqli_fetch_array($r)){
                 echo '<tr><td><input type="text" name ="nazwaP" value="'.$x['nazwaProduktu'].'" required></td>';
-                echo '<td><input type="number" name="NETTO" value="'.$x['NETTO'].'" id="NETTO" required></td>';
-                echo '<td><input type="number" name="VAT" value="'.$x['VAT'].'" id="VAT" required></td>';
-                echo '<td><input type="number" name="ilosc" value="'.$x['ilosc'].'" id="ilosc" required></td>';
+                echo '<td><input type="number" name="NETTO" value="'.$x['NETTO'].'" id="NETTO" min="0" step="0.01" required></td>';
+                echo '<td><select name="VAT" value="'.$x['VAT'].'" id="VAT" required>';
+                echo'<option value="23">23%</option>';
+                echo'<option value="8">8%</option>';
+                echo'<option value="5">5%</option>';
+                echo'<option value="0">0%</option></select></td>';
+                echo '<td><input type="number" name="ilosc" value="'.$x['ilosc'].'" id="ilosc" min="0" step="0.01" required></td>';
                 echo'<td><input list="projekt" name = "projekt" value="'.$_POST['projekt'].'" required>';
                 $sql2 = 'SELECT * FROM projekty inner join kontrahenci on kontrahenci.nip = projekty.klient_nip';
                 $r3 =mysqli_query($con, $sql2);

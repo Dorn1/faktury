@@ -19,13 +19,13 @@ require_once "connect.php";
     <form action="projekty.php" method="POST">
     <table rules=rows>
     <tr>
-        <th>nazwa</th><th>kontrahent</th><th>początek</th><th>koniec</th>
-    </tr>
+        <th>nazwa</th><th>kontrahent</th><th>początek</th><th>planowane zakończenie</th>
     <?php
     $sql2='SELECT * FROM kontrahenci';
     $r2=mysqli_query($con, $sql2);
     if(isset($_POST['id'])){
-    $sql='SELECT id_projektu , nazwa ,kontrahenci.kontrahent AS kont ,kontrahenci.nip AS nip, Data_rozpoczecia , Data_zakonczenia FROM projekty inner join kontrahenci on kontrahenci.nip=projekty.klient_nip WHERE id_projektu='.$_POST['id'];
+        echo'<th>zakończony</th></tr>';
+    $sql='SELECT id_projektu , nazwa ,kontrahenci.kontrahent AS kont ,kontrahenci.nip AS nip, Data_rozpoczecia , Data_zakonczenia, planowane_zakonczenie FROM projekty inner join kontrahenci on kontrahenci.nip=projekty.klient_nip WHERE id_projektu='.$_POST['id'];
     $r1=mysqli_query($con, $sql);
     $res= mysqli_fetch_array($r1);
     echo'<tr><td><input type="hidden" name="edit" value="'.$res['id_projektu'].'">';
@@ -37,7 +37,14 @@ require_once "connect.php";
         }
     echo'</datalist></td>';
     echo '<td><input type="date" name="startA" value="'.$res['Data_rozpoczecia'].'" required></td>';
-    echo '<td><input type="date" name="koniecA" value="'.$res['Data_zakonczenia'].'"></td>';
+    echo '<td><input type="date" name="planowaneA" value="'.$res['planowane_zakonczenie'].'" required></td>';
+    
+    if($res['Data_zakonczenia'] == NULL){
+    echo '<td><input type="checkbox" name="koniecA"></td>';
+    }
+    else{
+    echo '<td><input type="checkbox" name="koniecA"checked></td>';
+    }
     echo'</tr>';
     }
     else{
@@ -50,7 +57,8 @@ require_once "connect.php";
             }
         echo'</datalist></td>';
     echo '<td><input type="date" name="startA" required></td>';
-    echo '<td><input type="date" name="koniecA"></td>';
+    echo '<td><input type="date" name="planowaneA" required></td>';
+    
     echo'</tr>';
     }
     ?>
