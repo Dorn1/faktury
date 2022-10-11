@@ -12,7 +12,7 @@
 
    $login = $_SESSION['login'];
    $haslo=$_SESSION['haslo'];
-   $host="localhost";
+   $host="serwer.efektor.local";
    $db ="faktury";
    $con = @new mysqli($host,$login,$haslo,$db);
    if($con->connect_errno!=0){
