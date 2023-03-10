@@ -22,7 +22,7 @@ $_SESSION['start'] = date('2022-01-01') ;
         </table>
     </nav>
     <main>
-        SYSTEM OCR już w krótce
+        Strona główna
     </main>
 
 </body>
